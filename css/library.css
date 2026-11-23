@@ -1,0 +1,44 @@
+/* Yêu thích, Bạn bè, thanh tab dưới */
+/* ===================== YÊU THÍCH: tim trên mọi dòng bài hát, đồng bộ với mục Yêu thích ===================== */
+.row .heart{transition:transform .15s,color .15s}
+.row .heart:hover{color:#ef7d7f;transform:scale(1.15)}
+.row .heart.on:hover{color:var(--red)}
+.row .heart.pop,.right .np #npHeart.pop{animation:favPop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes favPop{0%{transform:scale(.6)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
+.row.leaving{opacity:0;transform:translateX(14px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}
+.fav-empty{border:1.5px dashed var(--line);border-radius:18px;padding:44px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--soft)}
+.fav-empty .fav-ic{width:64px;height:64px;border-radius:50%;background:var(--card);color:var(--red);font-size:30px;display:grid;place-items:center;box-shadow:0 6px 18px rgba(0,0,0,.08);margin-bottom:6px}
+.fav-empty b{font-size:16px}
+.fav-empty p{color:var(--mu);font-size:13px;max-width:320px;line-height:1.45;margin-bottom:10px}
+@media(prefers-reduced-motion:reduce){.row .heart.pop,.right .np #npHeart.pop{animation:none}.row.leaving{transition:none}}
+
+/* ===================== TAB BẠN BÈ (mobile) + trang danh sách bạn bè ===================== */
+#view-friends .frow{cursor:pointer;align-items:center}
+#view-friends .frow .cv{border-radius:50%;width:48px;height:48px}
+#view-friends .frow .n b{font-size:14.5px}
+#view-friends .frow .n span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#view-friends .frow .fplay{flex:none;width:36px;height:36px;border:0;border-radius:50%;background:var(--pr2);color:var(--pr);display:grid;place-items:center;cursor:pointer;font-size:13px;padding:0 0 0 2px;transition:transform .12s,background .15s,color .15s}
+#view-friends .frow .fplay:hover{background:var(--pr);color:#fff;transform:scale(1.06)}
+#view-friends .frow .fplay:active{transform:scale(.94)}
+#view-friends .frow .chev{font-style:normal;color:var(--mu);font-size:20px;line-height:1;margin-left:4px}
+@media(max-width:480px){#view-friends .frow .chev{display:none}}   /* màn nhỏ: bỏ mũi tên để dòng "Vừa nghe" hiện được nhiều chữ hơn */
+
+/* ===================== THANH TAB CHỈ CÓ BIỂU TƯỢNG (mobile) =====================
+   Nhãn chữ được ẩn về mặt hiển thị nhưng vẫn còn cho trình đọc màn hình (kèm aria-label + title). */
+@media(max-width:699px){
+  .tabbar button{position:relative;isolation:isolate;gap:0}
+  .tabbar button span{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
+  .tabbar button::before{content:"";position:absolute;left:50%;top:50%;width:50px;height:32px;margin:-16px 0 0 -25px;border-radius:16px;background:transparent;z-index:-1;transition:background .2s ease}
+  .tabbar button.on::before{background:var(--pr2)}
+  .tabbar button:active::before{background:var(--soft)}
+  .tabbar button.on:active::before{background:var(--pr2)}
+  .tabbar button:focus-visible{outline:2px solid var(--pr);outline-offset:-3px;border-radius:14px}
+}
+@media(max-width:699px) and (min-height:501px){
+  :root{--tabh:52px}                 /* không còn nhãn nên thanh tab thấp hơn (56 → 52px); thanh phát nhạc và nội dung tự nhích xuống theo */
+  .tabbar svg{width:26px;height:26px}
+}
+@media(max-width:699px) and (max-height:500px){
+  .tabbar button::before{width:44px;height:28px;margin:-14px 0 0 -22px;border-radius:14px}
+}
+@media(prefers-reduced-motion:reduce){.tabbar button::before{transition:none}}
