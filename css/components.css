@@ -1,0 +1,58 @@
+/* Hover thanh phát + dropdown tuỳ biến */
+/* ---------- Khung "đang phát" bên phải: nút tên bài / nghệ sĩ + hiệu ứng hover ---------- */
+.right .np #npn .np-t,.right .np #npn .np-a{all:unset;box-sizing:border-box;cursor:pointer;font:inherit;color:inherit;display:inline;text-align:left;border-radius:3px;overflow-wrap:anywhere;
+  background-image:linear-gradient(currentColor,currentColor);background-repeat:no-repeat;background-position:0 calc(100% - 1px);background-size:0 0;-webkit-box-decoration-break:clone;box-decoration-break:clone;
+  transition:background-size .38s cubic-bezier(.22,1,.36,1),color .25s ease}
+.right .np #npn .np-a[hidden]{display:none}
+.right .np #npn .np-t:focus-visible,.right .np #npn .np-a:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
+.right .np #npHeart{display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;margin:-6px -6px -6px 0;transition:transform .35s cubic-bezier(.34,1.56,.64,1),color .25s ease,background-color .25s ease;user-select:none}
+.right .np #npHeart:focus-visible{outline:2px solid var(--pr);outline-offset:1px}
+.right .np #npHeart.on{animation:npHeartPop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes npHeartPop{0%{transform:scale(.6)}50%{transform:scale(1.28)}75%{transform:scale(.94)}100%{transform:scale(1)}}
+.art{position:relative;overflow:hidden;isolation:isolate;transition:transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s cubic-bezier(.22,1,.36,1)}
+.art:focus-visible{outline:3px solid var(--pr);outline-offset:3px}
+@media(hover:hover){
+  .art:hover{transform:scale(1.02);box-shadow:0 8px 20px -8px rgba(17,24,39,.3)}
+  .right .np #npn .np-t:hover,.right .np #npn .np-t:focus-visible,.right .np #npn .np-a:hover,.right .np #npn .np-a:focus-visible{color:var(--pr);background-size:100% 1.5px}
+  .right .np #npHeart:hover{transform:scale(1.18);color:#ef7d7f;background:var(--dngbg)}
+  .right .np #npHeart.on:hover{color:var(--red);background:var(--dngbg)}
+  .right .np #npHeart:active{transform:scale(.92);transition-duration:.1s}
+}
+@media(prefers-reduced-motion:reduce){.right .np #npn .np-t,.right .np #npn .np-a,.right .np #npHeart,.art{transition-duration:.01ms!important}.art:hover{transform:none}.right .np #npHeart.on{animation:none}}
+
+/* ---------- Ô nhập liệu: hover / focus giống dropdown Giới tính ---------- */
+.field input{transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.field input:hover{border-color:var(--line2)}
+.field input:focus,.field input:focus-visible{border-color:var(--pr);box-shadow:0 0 0 3px rgba(47,146,247,.15)}
+.field input.err,.field input[aria-invalid="true"]{border-color:var(--red)}
+.field input.err:focus,.field input[aria-invalid="true"]:focus{box-shadow:0 0 0 3px rgba(229,57,59,.15)}
+@media(prefers-reduced-motion:reduce){.field input{transition:none!important}}
+/* ---------- Thanh tìm kiếm: viền xanh + glow khi focus, giống ô nhập trong Hồ sơ ---------- */
+.search{transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.search:focus-within,.search:focus-within:hover{background:var(--card);box-shadow:0 0 0 1px var(--pr),0 0 0 4px rgba(47,146,247,.15)}
+@media(prefers-reduced-motion:reduce){.search{transition:none!important}}
+/* ---------- Dropdown tùy chỉnh (thay cho menu mặc định của trình duyệt) ---------- */
+.msel{position:relative}
+.msel>select{position:absolute!important;inset:0;opacity:0;pointer-events:none;width:100%;height:100%}
+.msel-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--tx);font:inherit;text-align:left;cursor:pointer;outline:0;transition:border-color .2s ease,box-shadow .2s ease,background-color .2s ease}
+.msel-btn:hover{border-color:var(--line2)}
+.msel-btn:focus-visible,.msel.open .msel-btn{border-color:var(--pr);box-shadow:0 0 0 3px rgba(47,146,247,.15)}
+.msel-btn svg{flex:none;width:18px;height:18px;color:var(--mu);transition:transform .25s cubic-bezier(.22,1,.36,1),color .2s ease}
+.msel.open .msel-btn svg{transform:rotate(180deg);color:var(--pr)}
+.msel-list{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:60;margin:0;padding:6px;list-style:none;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 28px -6px rgba(17,24,39,.18),0 4px 10px -4px rgba(17,24,39,.08);max-height:240px;overflow:auto;
+  opacity:0;transform:translateY(-6px) scale(.98);transform-origin:top;visibility:hidden;pointer-events:none;transition:opacity .18s ease,transform .22s cubic-bezier(.22,1,.36,1),visibility 0s linear .22s}
+.msel.up .msel-list{top:auto;bottom:calc(100% + 6px);transform-origin:bottom;transform:translateY(6px) scale(.98)}
+.msel.open .msel-list{opacity:1;transform:none;visibility:visible;pointer-events:auto;transition:opacity .18s ease,transform .22s cubic-bezier(.22,1,.36,1),visibility 0s}
+.msel-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 10px;border-radius:9px;cursor:pointer;color:var(--tx);transition:background-color .15s ease,color .15s ease}
+.msel-opt+.msel-opt{margin-top:2px}
+.msel-opt.act{background:var(--soft)}
+.msel-opt[aria-selected="true"]{background:var(--pr2);color:var(--pr);font-weight:600}
+.msel-opt svg{width:16px;height:16px;flex:none;opacity:0}
+.msel-opt[aria-selected="true"] svg{opacity:1}
+/* Biến thể cho ô lọc ở trang admin: cùng kích thước với .ad-in (cao 40px, bo 11px) */
+#admin .ad-tools{position:relative;z-index:5}   /* thanh lọc nằm trên bảng để dropdown không bị bảng đè */
+.msel-ad{display:inline-block;width:auto;min-width:150px;flex:none}
+.msel-ad .msel-btn{height:40px;padding:0 12px;border-radius:11px;background:var(--card);white-space:nowrap}
+.msel-ad .msel-list{right:auto;min-width:100%;width:max-content;max-width:260px}
+@media(max-width:699px){.msel-ad{flex:1 1 140px;min-width:0}}
+@media(prefers-reduced-motion:reduce){.msel-btn,.msel-btn svg,.msel-list,.msel-opt{transition:none!important}}

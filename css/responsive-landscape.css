@@ -1,0 +1,24 @@
+/* Điện thoại xoay ngang */
+/* ===== Điện thoại / máy tính bảng xoay ngang (thấp, 700–1099px): 2 cột + panel phải dạng ngăn kéo ===== */
+@media(min-width:700px) and (max-width:1099px) and (max-height:500px){
+  :root{--sw:160px;--rw:0px}
+  .app{grid-template-columns:var(--sw) minmax(0,1fr);grid-template-rows:52px minmax(0,1fr)}
+  .top{grid-column:2;gap:8px;padding:0 12px}
+  .logo{padding:0 12px;font-size:17px}
+  .rtoggle{display:grid}
+  .right{display:flex;position:fixed;right:0;bottom:0;top:calc(env(safe-area-inset-top,0px) + 52px);
+    width:min(300px,70vw);background:var(--bg);z-index:60;border-left:1px solid var(--line);
+    box-shadow:-10px 0 30px rgba(0,0,0,.12);transform:translateX(105%);transition:transform .25s ease;
+    padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  body.rpanel-open .right{transform:none}
+  .player{left:calc(var(--sw) + 10px);right:10px}
+  .main{padding:14px 16px 96px}
+  .side a{padding:5px 0}
+  .side h6{margin:14px 0 6px;padding-top:10px}
+}
+/* Màn hình thấp: hero & lưới nghệ sĩ gọn hơn để không phải cuộn quá nhiều */
+@media(max-height:500px){
+  .hbart{width:64px;height:64px}
+  .ar{grid-template-columns:repeat(6,1fr)}
+  .modal{max-height:94vh;max-height:94dvh}
+}

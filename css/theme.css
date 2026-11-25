@@ -1,0 +1,34 @@
+/* Chế độ sáng / tối */
+.mj-theme{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--tx3);cursor:pointer;padding:0;flex:none;font:inherit;transition:color .15s,border-color .15s,background .15s,transform .15s}
+.mj-theme:hover{color:var(--pr);border-color:var(--pr)}
+.mj-theme:active{transform:scale(.92)}
+.mj-theme svg{display:block}
+.mj-theme .i-sun{display:none}
+html[data-theme=dark] .mj-theme .i-sun{display:block}
+html[data-theme=dark] .mj-theme .i-moon{display:none}
+.lp-fr{display:flex;align-items:center;gap:10px}
+.opt .mj-theme{width:34px;height:34px}
+.ad-foot .mj-tlabel{flex:1}
+.ad-foot .mj-theme{width:20px;height:20px;border:0;pointer-events:none;color:inherit}
+.ad-foot .mj-theme svg{width:18px;height:18px}
+html[data-theme=dark]{color-scheme:dark;--bg:#121317;--bg2:#0b0c0f;--card:#1a1c22;--soft:#24272e;--hov:#2e323a;--line:#2b2e36;--line2:#40454f;--tx:#f1f3f6;--tx2:#c2c8d2;--tx3:#9ba2ae;--mu:#7f8795;--pr:#4aa6ff;--pr2:#1d3a60;--red:#ff6568;--errbg:#3b2024;--dngbg:#3b2024;--okbg:#153523;--warnbg:#3b2f10;--swoff:#464c57;--g1:#1f4170;--g2:#17304f;--glass:18,19,23;--bar:#3a6ea8}
+html[data-theme=dark] .bd.ok{color:#4ade80}
+html[data-theme=dark] .bd.lock,html[data-theme=dark] .bd.fail{background:#3a1f22;color:#f87171}
+html[data-theme=dark] .bd.warn,html[data-theme=dark] .adv-badge{color:#fbbf24}
+html[data-theme=dark] .pcsave{color:#4ade80}
+html[data-theme=dark] .ad-toast{background:#eceef2;color:#111827}
+html[data-theme=dark] .ptoast{background:#eceef2;color:#111827}
+html[data-theme=dark] .nps-ctl .big{background:#eceef2;color:#111827;box-shadow:0 12px 26px rgba(0,0,0,.5)}
+html[data-theme=dark] .nps-ctl .big:active,html[data-theme=dark] .nps-ctl .big:hover{background:#fff}
+html[data-theme=dark] .ad-btn.dng{border-color:#5a2d31}
+html[data-theme=dark] #admin .ad-kpis .ad-card:hover{border-color:var(--pr)}
+html[data-theme=dark] .modalbg,html[data-theme=dark] .adv{background-color:rgba(0,0,0,.6)}
+html[data-theme=dark] .adv{background:rgba(0,0,0,.6)}
+html[data-theme=dark] .lp-foot{background:var(--bg2)}
+html[data-theme=dark] .card,html[data-theme=dark] .box,html[data-theme=dark] .ad-card,html[data-theme=dark] .plan,html[data-theme=dark] .modal{box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}
+html[data-theme=dark] .hero,html[data-theme=dark] .herobanner,html[data-theme=dark] .acct-head{border-color:rgba(74,166,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.06),0 8px 28px rgba(31,92,170,.18)}
+html[data-theme=dark] .cta,html[data-theme=dark] .lp-btn:not(.out),html[data-theme=dark] .btn:not(.o){box-shadow:0 6px 18px rgba(74,166,255,.28)}
+html[data-theme=dark] .lp-hero{background:radial-gradient(900px 420px at 78% 10%,rgba(74,166,255,.14),transparent 70%),var(--bg)}
+html[data-theme=dark] .lp-final{background:linear-gradient(135deg,#1f6fd1,#3aa0ff)}
+.mj-theme svg{transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+.mj-theme:hover svg{transform:rotate(25deg)}

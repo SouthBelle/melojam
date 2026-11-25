@@ -1,0 +1,255 @@
+/* Màn hình Đang phát + chữ chạy */
+/* ===== Nút chia sẻ ở panel phải (PC) ===== */
+
+/* ===== Mini-player (mobile): gợi ý có thể chạm để mở ===== */
+@media(max-width:699px),(max-height:500px){
+  .player{cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .player::before{content:"";position:absolute;left:50%;top:3px;width:28px;height:4px;margin-left:-14px;border-radius:4px;background:var(--line)}
+  .player{touch-action:none}   /* để kéo dọc lên mở trình phát không bị trang cuộn giành mất */
+}
+
+/* ===== Màn hình "Đang phát" toàn màn hình (mobile) ===== */
+.nps{position:fixed;inset:0;z-index:80;display:flex;flex-direction:column;background:var(--bg);overflow:hidden;color:var(--tx);
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+  transform:translateY(100%);visibility:hidden;
+  transition:transform .4s cubic-bezier(.22,1,.36,1),visibility 0s linear .4s}
+.nps.open{transform:none;visibility:visible;transition:transform .4s cubic-bezier(.22,1,.36,1),visibility 0s}
+.nps-bg{position:absolute;inset:-12%;filter:blur(56px) saturate(1.6);opacity:.55;pointer-events:none;transform:translateZ(0)}
+.nps-veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(var(--glass),.35) 0%,rgba(var(--glass),.78) 55%,var(--bg) 100%);pointer-events:none}
+.nps-top,.nps-body{position:relative;z-index:1}
+.nps-top{display:flex;align-items:center;justify-content:space-between;height:56px;padding:0 10px;flex:none;touch-action:none}
+.nps-lbl{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--mu)}
+.nps-ic{width:44px;height:44px;border:0;background:none;border-radius:50%;display:grid;place-items:center;color:var(--tx);cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent}
+.nps-ic.ghost{pointer-events:none}
+.nps-ic svg{width:26px;height:26px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.nps-ic:active{background:rgba(17,24,39,.08)}
+.nps-body{flex:1;min-height:0;display:flex;flex-direction:column;padding:0 24px 18px}
+.nps-stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;touch-action:none}
+.nps-art{--s:max(140px,min(calc(100vw - 56px),calc(100vh - 420px),420px));--s:max(140px,min(calc(100vw - 56px),calc(100dvh - 420px),420px));
+  width:var(--s);height:var(--s);border-radius:26px;flex:none;box-shadow:0 26px 60px rgba(17,24,39,.32);
+  transition:transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s}
+.nps.paused .nps-art{transform:scale(.86);box-shadow:0 10px 26px rgba(17,24,39,.2)}
+.nps-panel{flex:none}
+.nps-info{display:flex;align-items:center;gap:10px;margin-top:6px;touch-action:none}
+.nps-tx{flex:1;min-width:0}
+.nps-t,.nps-a{display:block;max-width:100%;border:0;background:none;padding:0;margin:0;font-family:inherit;text-align:left;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;-webkit-tap-highlight-color:transparent;transition:opacity .12s,color .12s}
+.nps-t{font-size:22px;line-height:1.25;font-weight:700;color:var(--tx)}
+.nps-a{font-size:16px;line-height:1.3;color:var(--mu);margin-top:2px}
+.nps-t:active,.nps-a:active{opacity:.5}
+.nps-t:focus-visible,.nps-a:focus-visible{outline:2px solid var(--pr);outline-offset:2px;border-radius:4px}
+@media(hover:hover){.nps-t:hover{text-decoration:underline}.nps-a:hover{color:var(--pr);text-decoration:underline}}
+.nps-ic.heart{font-size:26px;color:var(--mu);transition:transform .15s,color .15s}
+.nps-ic.heart.on{color:var(--red)}
+.nps-ic.heart:active{transform:scale(.88)}
+.nps-seekw{padding:0 10px;margin-top:12px}
+.nps-seek{position:relative;height:30px;display:flex;align-items:center;touch-action:none;cursor:pointer;outline:none}
+.nps-track{position:relative;flex:1;height:6px;border-radius:6px;background:rgba(17,24,39,.14)}
+.nps-track i{display:block;position:relative;height:100%;width:0;border-radius:6px;background:var(--pr);transition:width .16s linear}
+.nps-track i::after{content:"";position:absolute;right:-9px;top:50%;margin-top:-9px;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--pr);box-shadow:0 2px 8px rgba(47,146,247,.4);box-sizing:border-box;transition:transform .15s}
+.nps-seek.drag .nps-track i{transition:none}
+.nps-seek.drag .nps-track i::after,.nps-seek:focus-visible .nps-track i::after{transform:scale(1.25)}
+.nps-times{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-top:-2px;font-variant-numeric:tabular-nums}
+.nps-ctl{display:flex;align-items:center;justify-content:space-between;margin:8px 0 0}
+.nps-ctl button{position:relative;width:52px;height:52px;border-radius:50%;border:0;background:none;color:var(--tx);display:grid;place-items:center;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s,background .15s}
+.nps-ctl button:active{transform:scale(.9);background:rgba(17,24,39,.07)}
+.nps-ctl svg{width:26px;height:26px;display:block}
+.nps-ctl .big{width:72px;height:72px;background:#111827;color:#fff;box-shadow:0 12px 26px rgba(17,24,39,.32)}
+.nps-ctl .big:active{background:#111827;transform:scale(.93)}
+.nps-ctl .big svg{width:32px;height:32px}
+.nps-ctl .tg{color:var(--mu)}
+.nps-ctl .tg.on{color:var(--pr)}
+.nps-ctl .tg.on::after{content:"";position:absolute;bottom:5px;left:50%;margin-left:-2px;width:4px;height:4px;border-radius:50%;background:var(--pr)}
+.nps-ctl .rb{position:absolute;right:9px;top:9px;width:14px;height:14px;border-radius:50%;background:var(--pr);color:#fff;font-size:9px;font-weight:700;display:none;place-items:center;line-height:1;font-style:normal}
+.nps-ctl .tg.one .rb{display:grid}
+.nps-share{margin:16px auto 0;display:flex;align-items:center;gap:8px;padding:12px 24px;border-radius:99px;border:1px solid var(--line);background:rgba(var(--glass),.88);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  font:inherit;font-size:14px;font-weight:600;color:var(--tx);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.nps-share svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+.nps-share:active{background:var(--soft)}
+/* điện thoại nằm ngang: ảnh bên trái, điều khiển bên phải */
+@media(max-height:500px) and (orientation:landscape){
+  .nps-top{height:44px}
+  .nps-body{flex-direction:row;align-items:center;gap:28px;padding:0 28px 8px}
+  .nps-stage{flex:0 0 auto}
+  .nps-art{--s:max(110px,min(calc(100dvh - 84px),300px));--s:max(110px,min(calc(100vh - 84px),300px));border-radius:18px}
+  .nps-panel{flex:1;min-width:0}
+  .nps-ctl button{width:44px;height:44px}.nps-ctl .big{width:58px;height:58px}
+  .nps-ctl svg{width:22px;height:22px}.nps-ctl .big svg{width:26px;height:26px}
+  .nps-t{font-size:19px}
+  .nps-share{margin-top:8px;padding:9px 20px}
+}
+@media(prefers-reduced-motion:reduce){.nps,.nps-art,.nps-track i{transition:none!important}}
+html.nps-lock,html.nps-lock body{overflow:hidden;overscroll-behavior:none}
+
+/* ===== Menu chuột phải (PC) ===== */
+.row.ctx-on{background:var(--soft)}
+.ctxm{position:fixed;z-index:110;min-width:236px;max-width:300px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:6px;
+  box-shadow:0 16px 44px rgba(17,24,39,.2);font-size:14px;transform-origin:top left;animation:ctxIn .14s cubic-bezier(.22,1,.36,1)}
+@keyframes ctxIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+.ctxm .ch{padding:8px 10px 8px}
+.ctxm .ch b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctxm .ch span{display:block;font-size:12px;color:var(--mu);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ctxm hr{border:0;border-top:1px solid var(--line);margin:4px 6px}
+.ctxm button{display:flex;align-items:center;gap:10px;width:100%;border:0;background:none;border-radius:9px;padding:9px 10px;font:inherit;color:var(--tx);text-align:left;cursor:pointer}
+.ctxm button:hover,.ctxm button:focus-visible{background:var(--soft);outline:none}
+.ctxm button svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;color:var(--mu)}
+.ctxm button:hover svg,.ctxm button:focus-visible svg{color:var(--pr)}
+.ctxm button.on svg{color:var(--red);fill:var(--red);stroke:var(--red)}
+.ctxm button span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Avatar mặc định (chưa có ảnh): nền xám + hình người; ảnh người dùng tải lên (inline style) sẽ đè lên */
+.im-av.im-av.im-av{background-color:#e5e7eb;background-repeat:no-repeat;background-position:center;background-size:cover;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23e5e7eb'/%3E%3Ccircle cx='32' cy='25' r='11' fill='%239ca3af'/%3E%3Cpath d='M10 64c0-13 10-21 22-21s22 8 22 21z' fill='%239ca3af'/%3E%3C/svg%3E")}
+
+/* ===== Màn hình "Đang phát" trên PC: ảnh bìa bên trái, điều khiển bên phải ===== */
+.player .pn{cursor:pointer}
+@media(min-width:700px) and (min-height:501px){
+  .nps-body{flex-direction:row;align-items:center;justify-content:center;gap:clamp(32px,6vw,80px);max-width:1120px;width:100%;margin:0 auto;padding:0 40px 40px}
+  .nps-stage{flex:0 0 auto}
+  .nps-art{--s:min(46vw,calc(100vh - 220px),520px);--s:min(46vw,calc(100dvh - 220px),520px);border-radius:26px}
+  .nps-panel{flex:0 1 460px;min-width:0}
+  .nps-t{font-size:30px}.nps-a{font-size:18px}
+  .nps-share{margin:20px 0 0}
+  .nps-ic,.nps-ctl button,.nps-share{-webkit-tap-highlight-color:transparent}
+  .nps-ic:hover{background:rgba(17,24,39,.07)}
+  .nps-ctl button:hover{background:rgba(17,24,39,.07)}
+  .nps-ctl .big:hover{background:#1f2937}
+  .nps-share:hover{background:var(--soft)}
+}
+
+/* ===== Mini-player mobile: hàng 1 = tên bài + nút; hàng 2 = giờ | thanh tiến trình dài hết bề ngang | tổng giờ ===== */
+@media(max-width:699px),(max-height:500px){
+  .player{display:flex;flex-wrap:wrap;align-items:center;column-gap:8px;row-gap:0}
+  .player .pn{order:0;flex:1 1 0;min-width:0}
+  .player .ctl{order:1;flex:none}
+  .player::after{content:"";order:2;flex:0 0 100%;height:0}
+  .player #ptnow{order:3;flex:none}
+  .player .pg{order:4;flex:1 1 0;min-width:0;margin:0 10px}   /* chừa chỗ cho nút tròn nhô ra 2 đầu thanh, không đè lên số giờ */
+  .player #ptdur{order:5;flex:none;text-align:right}
+}
+
+/* ===== Điện thoại dọc: nút & chữ của mini-player và thanh tab đủ lớn để chạm ===== */
+@media(max-width:699px){
+  .player .pn{font-size:14px;font-weight:600}
+  .player .ctl{gap:4px}
+  .player .ctl span{width:40px;height:40px}
+  .player .ctl span svg{width:20px;height:20px}
+  .player .ctl .pl{width:46px;height:46px}
+  .player .ctl .pl svg{width:22px;height:22px}
+  .player #ptnow,.player #ptdur{font-size:12px}
+  .player .pg{padding:12px 0}
+  .tabbar span{font-size:11px}
+  .tabbar svg{width:24px;height:24px}
+  .main{padding-bottom:calc(var(--tabh) + 124px)}
+}
+@media(max-width:419px) and (min-width:375px){
+  .player .ctl span:first-child,.player #btnRepeat{display:none}   /* ngẫu nhiên / lặp đã có ở màn hình Đang phát, nhường chỗ cho tên bài + nút to hơn */
+}
+
+/* ===== Mobile: mọi hộp thoại (đăng nhập, thoát tài khoản, thanh toán…) nằm chính giữa màn hình, không dán đáy ===== */
+@media(max-width:699px){
+  .modalbg{align-items:center;justify-content:center;
+    padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+  .modal,#authModal .modal{max-width:420px;width:100%;margin:auto;border-radius:22px;padding:22px 20px;
+    max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);animation:modalPop .32s cubic-bezier(.22,1,.36,1)}
+}
+
+/* ===== Cảm ứng: dòng bài hát không bôi chọn chữ khi giữ lâu; menu có nút to dễ chạm ===== */
+@media(pointer:coarse){
+  .row{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  .ctxm{min-width:260px;max-width:min(320px,calc(100vw - 24px))}
+  .ctxm .ch b{font-size:15px}
+  .ctxm button{padding:13px 12px;font-size:15px;gap:12px}
+  .ctxm button svg{width:20px;height:20px}
+}
+
+/* Trang bạn bè: không hiện cột lượt nghe kiểu nghệ sĩ */
+#view-artist.is-friend .row .pc{display:none}
+#view-artist.is-friend .row .pc+em,#view-artist.is-friend .row .n+em{margin-left:auto}
+
+/* ===== Màn hình "Đang phát" (PC): hover nhẹ nhàng ===== */
+.nps-track{transition:height .15s ease}
+@media(hover:hover) and (pointer:fine){
+  .nps-ctl svg,.nps-ic svg,.nps-share svg{transition:transform .18s ease}
+  .nps-ctl button:not(.big):hover svg{transform:scale(1.1)}                 /* nút thường: icon to lên chút xíu */
+  .nps-ctl .big{transition:transform .18s ease,background .15s}
+  .nps-ctl .big:hover{transform:scale(1.05)}                                /* nút phát: chỉ phóng nhẹ */
+  .nps-ctl .big:active{transform:scale(.95)}
+  /* tim: chỉ hiện nền xám nhạt khi rê chuột; chỉ đỏ khi đã bấm thích (.on) */
+  .nps-ic.heart:not(.on):hover{color:var(--mu)}
+  .nps-share{transition:background .15s,box-shadow .2s ease}
+  .nps-share:hover{box-shadow:0 4px 12px rgba(17,24,39,.08)}
+  .nps:not(.paused) .nps-art:hover{transform:scale(1.015);cursor:pointer}
+  .nps.paused .nps-art:hover{transform:scale(.875);cursor:pointer}
+  .nps-seek:hover .nps-track{height:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .nps-ctl svg,.nps-ic svg,.nps-share svg,.nps-ctl .big,.nps-share,.nps-art{animation:none!important;transition:none!important}
+}
+
+/* ===== Thẻ nghệ sĩ: rê chuột = nhấc lên, ảnh sáng lên có lớp phủ tối nhẹ phía dưới ===== */
+.ar div i,.agrid div i{position:relative;overflow:hidden}
+/* .ar div có overflow:hidden (cắt tên dài) → chừa vùng đệm để bóng/hiệu ứng nhấc lên không bị cắt vuông; margin âm giữ nguyên kích thước ảnh */
+.ar div{padding:10px 10px 34px;margin:-10px -10px -34px}
+.ar div i::before,.agrid div i::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(to top,rgba(17,24,39,.5),rgba(17,24,39,0) 60%);opacity:0;transition:opacity .3s ease}
+@media(hover:hover) and (pointer:fine){
+  .ar div,.agrid div{transition:transform .3s cubic-bezier(.22,1,.36,1),color .2s ease}
+  .ar div i,.agrid div i{transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s ease,filter .3s ease}
+  .ar div:hover,.agrid div:hover{transform:translateY(-5px)}
+  .ar div:hover i,.agrid div:hover i{transform:none;box-shadow:0 12px 22px rgba(17,24,39,.26);filter:saturate(1.12) brightness(1.04)}
+  .ar div:hover i::before,.agrid div:hover i::before{opacity:1}
+  .ar div:hover{color:var(--pr);font-weight:600}
+  .ar div:active,.agrid div:active{transform:translateY(-2px) scale(.97)}
+}
+
+/* ===== Hover mượt hơn: chuyển động dài hơn + đường cong êm, cả lúc rê vào lẫn lúc rê ra ===== */
+@media(hover:hover) and (pointer:fine){
+  .nps{--ez:cubic-bezier(.22,.61,.36,1)}
+  .nps .nps-ctl button,.nps .nps-ctl .big,.nps .nps-ic,.nps .nps-ic.heart,.nps .nps-share{
+    transition:transform .32s var(--ez),background-color .32s var(--ez),box-shadow .32s var(--ez),color .32s var(--ez),border-color .32s var(--ez),opacity .2s ease}
+  .nps .nps-ctl svg,.nps .nps-ic svg,.nps .nps-share svg{transition:transform .32s var(--ez)}
+  .nps .nps-t,.nps .nps-a{transition:color .25s var(--ez),opacity .2s ease}
+  .nps .nps-art{transition:transform .5s var(--ez),box-shadow .5s var(--ez)}
+  .nps .nps-track{transition:height .25s var(--ez)}
+  .nps .nps-track i::after{transition:transform .25s var(--ez)}
+  /* bấm xuống vẫn phản hồi tức thì */
+  .nps .nps-ctl button:active,.nps .nps-ctl .big:active,.nps .nps-ic:active,.nps .nps-share:active{transition-duration:.08s}
+}
+@media(prefers-reduced-motion:reduce){
+  .nps .nps-ctl button,.nps .nps-ic,.nps .nps-share,.nps .nps-ctl svg,.nps .nps-art{transition:none!important}
+}
+
+/* ===== Mini-player: nút điều khiển có hiệu ứng giống màn hình "Đang phát" (icon to lên, nút phát phóng nhẹ, nhấn co lại, chấm báo bật) ===== */
+.ctl span svg{transition:transform .18s ease}
+.ctl span:active{transform:scale(.9);background:rgba(17,24,39,.07)}
+.ctl .pl:active{transform:scale(.93);background:var(--tx)}
+.ctl span:not(.pl)::after{content:"";position:absolute;bottom:2px;left:50%;margin-left:-2px;width:4px;height:4px;border-radius:50%;background:var(--pr);transform:scale(0);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+.ctl span.on::after{transform:scale(1)}
+.ctl .pl{box-shadow:0 6px 14px rgba(17,24,39,.28)}
+@media(hover:hover) and (pointer:fine){
+  .ctl span{transition:transform .32s cubic-bezier(.22,.61,.36,1),background-color .32s cubic-bezier(.22,.61,.36,1),color .32s cubic-bezier(.22,.61,.36,1),box-shadow .32s cubic-bezier(.22,.61,.36,1)}
+  .ctl span:not(.pl):hover svg{transform:scale(1.1)}
+  .ctl .pl:hover{background:#1f2937;color:#fff;transform:scale(1.05)}
+  .ctl span:active,.ctl .pl:active{transition-duration:.08s}
+  .ctl .pl:active{transform:scale(.95)}
+}
+@media(prefers-reduced-motion:reduce){.ctl span,.ctl span svg,.ctl span::after{transition:none!important}}
+
+/* ===== Tên bài + ca sĩ: gạch chân chạy dần từ trái sang phải thay vì hiện cái bụp ===== */
+@media(hover:hover) and (pointer:fine){
+  .nps .nps-t,.nps .nps-a{
+    width:fit-content;max-width:100%;padding-bottom:3px;margin-bottom:-3px;
+    background:linear-gradient(currentColor,currentColor) left bottom/0% 2px no-repeat;
+    transition:background-size .4s var(--ez),color .3s var(--ez),opacity .2s ease}
+  .nps .nps-t:hover,.nps .nps-a:hover{text-decoration:none;background-size:100% 2px}
+  .nps .nps-a:hover{color:var(--pr)}
+}
+@media(prefers-reduced-motion:reduce){.nps .nps-t,.nps .nps-a{transition:none!important}}
+
+/* ===== Tên bài quá dài: tự chạy từ phải sang trái (lặp vô hạn) ===== */
+.mqx{display:inline}
+.mqx.on{display:inline-block;white-space:nowrap;will-change:transform}
+.mqx.on::after{content:attr(data-t);padding-left:44px}
+/* mờ dần ở mép phải để báo hiệu còn chữ phía sau */
+.pn.marq,.nps-t.marq,.nps-a.marq{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 22px),transparent)}
+@media(prefers-reduced-motion:reduce){.mqx.on{animation:none!important}}
