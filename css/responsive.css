@@ -1,0 +1,318 @@
+/* Responsive: tablet / điện thoại */
+/* =====================================================================
+   RESPONSIVE – iPhone (SE → Pro Max), iPad (mini → Pro 13"), laptop/desktop
+   Tier 1: ≥1100px  → 3 cột (sidebar | nội dung | đang phát)
+   Tier 2: 700–1099 → 2 cột (sidebar | nội dung)       [iPad dọc/ngang, phone ngang lớn]
+   Tier 3: <700px   → 1 cột + thanh tab dưới + mini-player [iPhone dọc]
+   ===================================================================== */
+/* thanh cuộn mảnh, bo tròn, chỉ đậm lên khi rê chuột */
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(130,140,160,.32);border-radius:99px;border:2px solid transparent;background-clip:padding-box;transition:background .2s}
+::-webkit-scrollbar-thumb:hover{background:rgba(47,146,247,.7);border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:active{background:var(--pr);border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-button{display:none;width:0;height:0}
+::-webkit-scrollbar-corner{background:transparent}
+@supports not selector(::-webkit-scrollbar){*{scrollbar-width:thin;scrollbar-color:rgba(130,140,160,.4) transparent}}
+:root{--sw:200px;--rw:290px;--tabh:0px;
+padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{overflow:hidden;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+/* ---------- Khung app: trừ safe-area để không bị tràn trang ---------- */
+.app{grid-template-columns:var(--sw) minmax(0,1fr) var(--rw);grid-template-rows:64px minmax(0,1fr);
+height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+height:calc(var(--appH,100dvh) - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+.logo{grid-column:1;grid-row:1}
+.top{grid-column:2/4;grid-row:1;min-width:0}
+.side{grid-column:1;grid-row:2;min-height:0;overscroll-behavior:contain}
+.main{grid-column:2;grid-row:2;min-width:0;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-bottom:150px}
+.right{grid-column:3;grid-row:2}
+.search{width:auto;flex:0 1 220px;min-width:0}
+.mlogo,.tabbar,.mq{display:none}
+.main>.view{min-width:0}
+.main h2,.hd h1{overflow-wrap:anywhere}
+
+/* ---------- Lưới nội dung co giãn theo bề rộng ---------- */
+.ggrid{grid-template-columns:repeat(auto-fill,minmax(max(160px,calc((100% - 28px)/3)),1fr))}
+.agrid{grid-template-columns:repeat(auto-fill,minmax(max(96px,calc((100% - 48px)/4)),1fr))}
+.pgrid{grid-template-columns:repeat(auto-fill,minmax(max(120px,calc((100% - 48px)/4)),1fr))}
+.plans{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));max-width:640px}
+.pgrid b,.agrid b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ar div{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd{gap:clamp(14px,3vw,22px)}
+.hd i{width:clamp(88px,22vw,160px);height:auto;aspect-ratio:1}
+.hd>div{min-width:0}
+.hd h1{font-size:clamp(22px,4.5vw,30px)}
+.player{left:calc(var(--sw) + 10px);right:calc(var(--rw) + 10px);z-index:30}
+.notifpanel{max-height:70vh;overflow:auto}
+.pg{touch-action:none}
+.modal{max-height:88vh;max-height:88dvh}
+
+/* ---------- Màn hình rất lớn ---------- */
+@media(min-width:1500px){:root{--sw:220px;--rw:310px}}
+/* Màn hình lớn (Full HD, 2K, 4K): phóng to toàn bộ giao diện để chữ/nút không bị bé */
+@media(min-width:1700px){:root{--z:1.25}}
+@media(min-width:2300px){:root{--z:1.5}}
+@media(min-width:3200px){:root{--z:2}}
+@media(min-width:1700px){
+  html{zoom:var(--z)}
+  .app{position:fixed;left:0;top:0;right:0;bottom:0;height:auto}
+  .modal{max-height:calc(88vh / var(--z))}
+  .notifpanel{max-height:calc(70vh / var(--z))}
+}
+@media(min-width:1100px) and (max-height:720px){.art{height:120px}}
+
+/* ---------- Laptop nhỏ / iPad ngang (1100–1279) ---------- */
+@media(min-width:1100px) and (max-width:1279px){:root{--rw:260px}.top{gap:14px;padding:0 18px}.main{padding-left:20px;padding-right:20px}}
+
+/* =====================================================================
+   TIER 2 – 700 → 1099px : sidebar + nội dung, ẩn panel phải
+   ===================================================================== */
+@media(max-width:1099px){
+  :root{--sw:190px;--rw:0px}
+  .app{grid-template-columns:var(--sw) minmax(0,1fr)}
+  .top{grid-column:2;gap:12px;padding:0 16px}
+  .right{display:none}
+  .player{right:10px}
+  .logo{padding:0 16px;font-size:18px}
+  .main{padding:18px 20px 150px}
+  .two{grid-template-columns:1fr}
+  .ar{grid-template-columns:repeat(3,1fr)}
+}
+@media(min-width:1020px) and (max-width:1099px){.ar{grid-template-columns:repeat(6,1fr)}.two{grid-template-columns:1fr 1fr}}
+@media(max-width:899px){:root{--sw:176px}#tab-nhac,.me .mename{display:none}.search{flex-basis:180px}.cta{padding:6px 12px}}
+
+
+/* ---------- 840–1099px: vẫn giữ panel phải (thu hẹp) ---------- */
+.rtoggle{display:none}
+@media(min-width:840px) and (max-width:1099px){
+  :root{--sw:170px;--rw:230px}
+  .app{grid-template-columns:var(--sw) minmax(0,1fr) var(--rw)}
+  .top{grid-column:2/4}
+  .right{display:flex;padding:14px}
+  .player{right:calc(var(--rw) + 10px)}
+  .art{height:130px}
+}
+/* ---------- 700–839px: panel phải thành ngăn kéo, mở bằng nút ♫ ---------- */
+@media(min-width:700px) and (max-width:839px){
+  .rtoggle{display:grid}
+  .right{display:flex;position:fixed;right:0;bottom:0;top:calc(env(safe-area-inset-top,0px) + 64px);
+    width:min(300px,86vw);background:var(--bg);z-index:60;border-left:1px solid var(--line);
+    box-shadow:-10px 0 30px rgba(0,0,0,.12);transform:translateX(105%);transition:transform .25s ease;
+    padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+  body.rpanel-open .right{transform:none}
+}
+
+/* =====================================================================
+   TIER 3 – <700px : điện thoại dọc
+   ===================================================================== */
+@media(max-width:699px){
+  :root{--sw:0px;--tabh:56px}
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr)}
+  .logo,.side,.right,#tab-nhac,.sp,.me .mename{display:none}
+  .top{grid-column:1;grid-row:1;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;
+       padding:8px 12px 10px;overflow:visible;position:relative;z-index:5;background:var(--bg)}
+  .mlogo{display:flex;align-items:center;gap:8px;flex:1 1 auto;min-width:0;font-weight:700;font-size:18px;cursor:pointer}
+  .mlogo b{width:30px;height:30px;display:block;flex:none}
+  .mlogo span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cta{padding:8px 14px;font-size:12px}
+  .ctat{display:none}
+  .me b{width:34px;height:34px}
+  .bell{width:36px;height:36px}
+  .search{order:10;flex:1 1 100%;width:100%;padding:10px 14px}
+  .main{grid-column:1;grid-row:2;padding:14px 14px calc(var(--tabh) + 108px)}
+  .main h2{font-size:22px;margin-bottom:10px}
+  .box{padding:14px;border-radius:16px}
+  .hero{padding:16px;border-radius:16px}
+  .two{grid-template-columns:1fr}
+  .ar{grid-template-columns:repeat(3,1fr)}
+  .acct{max-width:100%}
+  .acct-head{padding:14px;border-radius:18px}
+  .acct-head i{width:52px;height:52px}
+  .acct .opt .ic{width:34px;height:34px;font-size:14px}
+  .tabs2{gap:16px}
+
+  /* lối tắt tới các mục không nằm trên thanh tab */
+  .mq{display:flex;gap:8px;margin:-2px -14px 14px;padding:0 14px;overflow-x:auto;scrollbar-width:none}
+  .mq::-webkit-scrollbar{display:none}
+  .mq .chip{flex:none}
+
+  /* thanh tab dưới */
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:45;
+    height:calc(var(--tabh) + env(safe-area-inset-bottom,0px));
+    padding:0 env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
+    background:rgba(var(--glass),.96);-webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);
+    border-top:1px solid var(--line)}
+  .tabbar button{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    background:none;border:0;padding:0;font:inherit;font-size:10.5px;font-weight:500;color:var(--mu);cursor:pointer}
+  .tabbar button.on{color:var(--pr)}
+  .tabbar svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .tabbar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+
+  .player{left:calc(8px + env(safe-area-inset-left,0px));right:calc(8px + env(safe-area-inset-right,0px));
+    bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 8px)}
+
+  /* thông báo dạng thanh nổi toàn chiều ngang */
+  .notifpanel{position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top,0px) + 54px);width:auto}
+
+  /* thanh toán dạng bottom-sheet */
+  .modalbg{padding:0;align-items:flex-end}
+  .modal{max-width:none;border-radius:22px 22px 0 0;max-height:92vh;max-height:92dvh;
+    padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px))}
+}
+
+/* ---------- Mini-player gọn: điện thoại dọc + mọi thiết bị thấp (landscape) ---------- */
+@media(max-width:699px),(max-height:500px){
+  .player{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"pn pn ctl" "now pg dur";
+    column-gap:8px;align-items:center;padding:8px 14px 6px;border-radius:18px}
+  .pn{grid-area:pn;min-width:0;text-align:left;margin:0;font-size:13px;font-weight:500;color:var(--tx);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ctl{grid-area:ctl;gap:2px}
+  .ctl span{width:32px;height:32px}
+  .ctl .pl{width:38px;height:38px}
+  .pg{grid-area:pg;padding:8px 0}
+  .ptime{display:contents}
+  .ptime span{font-size:10px;color:var(--mu);margin:0}
+  #ptnow{grid-area:now}#ptdur{grid-area:dur;text-align:right}
+}
+
+/* ---------- iPhone nhỏ (SE / mini ≤ 375): bỏ bớt nút phụ để pn không bị nén ---------- */
+@media(max-width:374px){
+  .ctl span:first-child,#btnRepeat{display:none}
+  .main{padding-left:12px;padding-right:12px}
+  .mq{margin-left:-12px;margin-right:-12px;padding-left:12px;padding-right:12px}
+  .hero h3{font-size:15px}
+  .mlogo{font-size:16px;gap:6px}.mlogo b{width:26px;height:26px}
+  .top{gap:8px 6px;padding-left:10px;padding-right:10px}
+  .cta{padding:8px 10px}
+  .ask{padding-left:12px}
+  .btn{padding:9px 14px}
+}
+
+/* ---------- Điện thoại xoay ngang (thấp) ---------- */
+@media(max-height:500px){
+  .app{grid-template-rows:52px minmax(0,1fr)}
+  .main{padding-bottom:96px}
+  .player{bottom:calc(6px + env(safe-area-inset-bottom,0px));padding:6px 14px 4px}
+  .pn{font-size:12px}
+  .side{padding:10px 16px}
+}
+@media(max-width:699px) and (max-height:500px){
+  :root{--tabh:44px}
+  .app{grid-template-rows:auto minmax(0,1fr)}
+  .top{flex-wrap:nowrap;padding:6px 12px}
+  .mlogo{flex:none}.mlogo span{display:none}
+  .search{order:0;flex:1 1 auto;width:auto;padding:7px 12px}
+  .tabbar span{display:none}
+  .player{bottom:calc(var(--tabh) + env(safe-area-inset-bottom,0px) + 6px)}
+  .main{padding-bottom:calc(var(--tabh) + 84px)}
+  .notifpanel{top:calc(env(safe-area-inset-top,0px) + 50px)}
+}
+
+/* ---------- Cảm ứng: iOS không tự zoom khi focus + vùng chạm ≥ 44px ---------- */
+@media(pointer:coarse){
+  .finput,.field input,.field select,.ask input,.search input{font-size:16px}
+  .chip{padding:9px 14px;min-height:38px}
+  .btn{min-height:40px}
+  .bell{width:40px;height:40px}
+  .row{padding:10px 6px}
+  .row .heart{padding:10px}
+  .ctl span{width:40px;height:40px}
+  .ctl .pl{width:44px;height:44px}
+  .tabs2 span{padding:12px 0}
+  .mclose{padding:10px}
+  .pg{padding:14px 0}
+  .side a{padding:9px 0}
+}
+@media(max-width:699px) and (pointer:coarse){.ctl span{width:34px;height:34px}.ctl .pl{width:40px;height:40px}}
+
+/* ---------- Thiết bị không hover: bỏ hiệu ứng "dính" sau khi chạm ---------- */
+@media(hover:none){
+  .gtile:hover,.bell:hover,.agrid div:hover i,.pgrid div:hover i,.ar div:hover i,.row:hover .cv{transform:none;box-shadow:none}
+  .opt:hover,.fr:hover{margin:0;padding-left:0;padding-right:0;background:none}
+  .row:hover{background:none}.row.on{background:var(--soft)}
+  .btn:hover,.cta:hover{filter:none;box-shadow:none}
+  .opt:hover{padding:14px 0}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ---------- Thanh tiến trình: cục kéo luôn hiện ---------- */
+.pg{outline:none}
+.pg .pgtrack{height:5px;transition:height .12s}
+.pg:hover .pgtrack,.pg.seeking .pgtrack{height:7px}
+.pg .pgtrack i::after{opacity:1;right:-8px;width:16px;height:16px;background:#fff;border:3px solid var(--pr);box-sizing:border-box;
+  box-shadow:0 1px 5px rgba(0,0,0,.28);transition:transform .12s,box-shadow .12s}
+.pg:hover .pgtrack i::after{transform:translateY(-50%) scale(1.15)}
+.pg.seeking .pgtrack i::after,.pg:focus-visible .pgtrack i::after{transform:translateY(-50%) scale(1.3);box-shadow:0 0 0 6px rgba(47,140,255,.18),0 1px 5px rgba(0,0,0,.28)}
+.pg.seeking{cursor:grabbing}
+/* bong bóng thời gian khi kéo */
+.pg .pgtrack i::before{content:attr(data-t);position:absolute;right:0;bottom:16px;transform:translateX(50%);background:var(--tx);color:#fff;
+  font-size:11px;font-weight:600;font-style:normal;line-height:1;padding:5px 7px;border-radius:7px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s}
+.pg.seeking .pgtrack i::before{opacity:1}
+@media(pointer:coarse){.pg .pgtrack i::after{width:20px;height:20px;right:-10px}}
+
+/* ---------- Báo lỗi form thanh toán ---------- */
+.ferr{font-size:13px;font-weight:600;line-height:1.4;margin:-4px 0 12px;color:var(--red)}
+.ferr.show::before{content:"⚠";margin-right:6px}
+.finput.bad{border-color:var(--red);background:var(--errbg);animation:fshake .3s}
+.finput.bad:focus{outline-color:var(--red)}
+@keyframes fshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+
+/* ---------- Cột lượt nghe ở giữa mỗi dòng bài hát (giống Spotify) ---------- */
+.row .pc{flex:0 0 30%;min-width:120px;text-align:left;color:var(--mu);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.row .pc+em{margin-left:0;min-width:40px}
+@media(max-width:699px){.row .pc{display:none}.row .pc+em{margin-left:auto}}
+@media(min-width:840px) and (max-width:1099px){.row .pc{display:none}.row .pc+em{margin-left:auto}}
+
+/* ---------- Ô tìm kiếm nằm giữa thanh trên cùng ---------- */
+.sp0{display:none}
+@media(min-width:1100px){
+  .top{position:relative}
+  .search{position:absolute;left:calc(50% - var(--sw) / 2);top:50%;transform:translate(-50%,-50%);flex:none;width:min(440px,40%)}
+}
+@media(min-width:700px) and (max-width:1099px){
+  .sp0{display:block;flex:1}
+  .search{flex:0 1 300px}
+}
+
+/* ---------- Nút quay lại / tiến tới / trang chủ ---------- */
+.navbtns{display:flex;align-items:center;gap:8px;flex:none}
+.navbtns button{width:36px;height:36px;border-radius:50%;border:0;background:var(--soft);color:var(--tx);display:grid;place-items:center;cursor:pointer;padding:0;transition:background-color .15s,opacity .15s,transform .1s}
+.navbtns button:hover:not(:disabled){background:var(--hov)}
+.navbtns button:active:not(:disabled){transform:scale(.92)}
+.navbtns button:disabled{opacity:.35;cursor:default}
+.navbtns button:focus-visible{outline:2px solid var(--pr);outline-offset:2px}
+.navbtns svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+@media(min-width:700px) and (max-width:899px){.ctat{display:none}.navbtns{gap:6px}.navbtns button{width:32px;height:32px}}
+@media(max-width:699px){.navbtns{display:none}}
+@media(pointer:coarse) and (min-width:700px){.navbtns button{width:40px;height:40px}}
+
+/* ---------- Thanh âm lượng ---------- */
+.search input{text-overflow:ellipsis}
+.player .vol{position:absolute;right:22px;top:32px;height:38px;display:flex;align-items:center;gap:4px}
+.vbtn{width:32px;height:32px;border:0;border-radius:50%;background:none;color:var(--mu);display:grid;place-items:center;cursor:pointer;padding:0;flex:none}
+.vbtn:hover{color:var(--tx);background:var(--soft)}
+.vbtn:focus-visible{outline:2px solid var(--pr);outline-offset:1px}
+.vbtn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+/* Icon loa: sóng âm "vẽ" ra lần lượt khi tăng, thu lại khi giảm; dấu X vẽ ra khi tắt tiếng */
+#vicon{overflow:visible}
+#vicon .w{stroke-dasharray:1;stroke-dashoffset:1;opacity:0;transition:stroke-dashoffset .22s ease-in,opacity .18s ease}
+#vicon:not([data-s="0"]) .w1,#vicon[data-s="2"] .w2,#vicon[data-s="3"] .w2,#vicon[data-s="3"] .w3,#vicon[data-s="0"] .x1,#vicon[data-s="0"] .x2{stroke-dashoffset:0;opacity:1;transition:stroke-dashoffset .3s cubic-bezier(.22,1,.36,1),opacity .15s ease}
+#vicon[data-s="2"] .w2,#vicon[data-s="3"] .w2,#vicon[data-s="0"] .x2{transition-delay:.07s}#vicon[data-s="3"] .w3{transition-delay:.14s}
+#vicon.noanim .w{transition:none!important}
+.vbtn:active svg{transform:scale(.88)}.vbtn svg{transition:transform .15s ease}
+@media(prefers-reduced-motion:reduce){#vicon .w,.vbtn svg{transition:none!important}}
+.vslider{width:92px;padding:13px 0;cursor:pointer;touch-action:none;outline:none}
+.vtrack{height:4px;border-radius:2px;background:var(--soft);position:relative;transition:height .12s}
+.vtrack i{display:block;height:100%;width:70%;background:var(--mu);border-radius:2px;position:relative;transition:background-color .12s}
+.vtrack i::after{content:"";position:absolute;right:-6px;top:50%;width:12px;height:12px;border-radius:50%;background:#fff;border:2.5px solid var(--pr);box-sizing:border-box;box-shadow:0 1px 4px rgba(0,0,0,.28);transform:translateY(-50%) scale(.6);opacity:0;transition:opacity .12s,transform .12s}
+.vslider:hover .vtrack,.vslider.seeking .vtrack,.vslider:focus-visible .vtrack{height:6px}
+.vslider:hover .vtrack i,.vslider.seeking .vtrack i,.vslider:focus-visible .vtrack i{background:var(--pr)}
+.vslider:hover .vtrack i::after,.vslider.seeking .vtrack i::after,.vslider:focus-visible .vtrack i::after{opacity:1;transform:translateY(-50%) scale(1)}
+.vslider.seeking{cursor:grabbing}
+@media(min-width:700px) and (max-width:1099px){.vslider{width:48px}.player .vol{right:12px}}
+@media(pointer:coarse){.player .vol{top:35px}}
+@media(max-width:699px),(max-height:500px){.player .vol{display:none}}
